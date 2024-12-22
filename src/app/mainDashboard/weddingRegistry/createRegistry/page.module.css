@@ -1,0 +1,208 @@
+.pageContainer * {
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.pageContainer {
+    padding: 2rem;
+    background: #f0f0f0;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  
+  .tilesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+  }
+  
+  .tile {
+    flex: 1 1 300px;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    min-width: 300px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .tile * {
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .desc {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .startDesc, .endDesc {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .nameGroup, .inputGroup, .dateGroup, .datePicker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .nameGroup {
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .inputBox {
+    background-color: transparent;
+    width: 100%;
+    max-width: 400px;
+    color: black;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: none;
+    border-bottom: 0.5px solid black;
+    outline: none;
+    margin: 1rem 0;
+    text-align: left;
+  }
+  
+  .inputBox:focus {
+    border-bottom: 0.7px solid black;
+  }
+  
+  .inputBox::placeholder {
+    text-align: left;
+  }
+  .buttonRow {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .button {
+    font-size: 1rem;
+    padding: 0.7rem 2rem;
+    color: black;
+    background: transparent;
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    margin-top: 1.5rem;
+  }
+  
+  .button:hover {
+    background-color: #333;
+    color: white;
+    border-color: #333;
+  }
+
+  .backButton {
+    font-size: 1rem;
+    padding: 0.7rem 2rem;
+    color: black;
+    background: transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    margin-top: 1.5rem;
+  }
+
+  .backButton:hover {
+    background-color: #bdbdbd;
+    color: black;
+
+  }
+  
+  .inputDate {
+    font-size: 1rem;
+    color: #4b4b4b;
+    border: none;
+    border-bottom: 1px solid #4b4b4b;
+    outline: none;
+    text-align: center;
+    padding: 0.5rem;
+    width: 150px;
+    cursor: pointer;
+    background: transparent;
+  }
+  
+  .inputDate:hover {
+    border-bottom: 1px solid #000;
+  }
+  
+  .inputDate:focus {
+    border-bottom: 1px solid #000;
+  }
+  
+  .label {
+    color: #333;
+    font-size: 1.1rem;
+  }
+
+  .react-datepicker {
+    font-family: 'Times New Roman', Times, serif;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  .react-datepicker__input-container input {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: none;
+    border-bottom: 0.5px solid black;
+    outline: none;
+    text-align: center;
+  }
+  
+  .react-datepicker__input-container input:focus {
+    border-bottom: 0.7px solid black;
+  }
+  
+
+
+  /* .createRegistryTile {
+    background-image: url('/images/background-2.jpg');
+    background-position: center;
+    background-size: cover;
+  }
+  
+  .addressTile {
+    background-image: url('/images/background-2.jpg');
+    background-position: center;
+    background-size: cover;
+  }
+  
+  .dateTile {
+    background-image: url('/images/background.jpg');
+    background-position: center;
+    background-size: cover;
+  } */
+  
+  /* Mobile Styles */
+  @media (max-width: 768px) {
+    .inputBox {
+      max-width: 90%;
+    }
+  
+    .button {
+      padding: 0.5rem 1.5rem;
+    }
+  
+    .nameGroup {
+      flex-direction: column;
+    }
+  }
+  

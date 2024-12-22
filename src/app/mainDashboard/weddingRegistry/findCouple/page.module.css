@@ -1,0 +1,99 @@
+.container * {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    min-height: 100vh;
+    background-color: #ffffff;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+.container p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.inputBox {
+    background-color: transparent;
+    width: 300px;
+    color: black;
+    max-width: 400px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: none;
+    border-bottom: 0.5px solid black;
+    outline: none;
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.inputBox:focus {
+    border-bottom: 0.7px solid black;
+}
+
+/* New Button Row */
+.buttonRow {
+    display: flex; /* Changed to align buttons in a row */
+    gap: 1rem; /* Added space between buttons */
+    margin-top: 1.5rem; /* Ensures spacing above the button row */
+}
+
+/* Updated Back Button */
+.backButton {
+    padding: 0.7rem 2rem;
+    font-size: 1rem;
+    background: transparent;
+    color: black;
+    /* border: 1px solid black; */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.backButton:hover {
+    background-color: #bdbdbd;
+    color: black;
+    border-color: #bdbdbd;
+}
+
+.findButton {
+    padding: 0.7rem 2rem;
+    font-size: 1rem;
+    color: black;
+    background: transparent;
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.findButton:hover {
+    background-color: #333;
+    color: white;
+    border-color: #333;
+}
+
+@media (max-width: 768px) {
+    .inputBox {
+        max-width: 90%;
+    }
+
+    .buttonRow {
+        flex-direction: column; /* Stacks buttons vertically on smaller screens */
+        gap: 0.5rem; /* Reduced gap for better spacing on mobile */
+    }
+}
