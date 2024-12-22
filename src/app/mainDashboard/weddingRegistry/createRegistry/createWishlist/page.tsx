@@ -9,6 +9,7 @@ interface Product {
   price: string;
   images: { src: string }[];
   quantity: number;
+  url?: string; // Optional URL for redirecting
 }
 
 interface Collection {
@@ -36,23 +37,32 @@ let customIdCounter = 100000; // For unique IDs for custom products
 const WishlistPage: React.FC = () => {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
-  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
+  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(
+    null
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const scrollref = useRef<HTMLDivElement | null>(null);
   const [showCartPreview, setShowCartPreview] = useState(false);
+
+  // States for custom product
   const [customProductName, setCustomProductName] = useState("");
-  const [customProductURL, setCustomProductURL] = useState("");
+  const [customProductRedirectURL, setCustomProductRedirectURL] = useState("");
+  const [customProductQuantity, setCustomProductQuantity] = useState(1);
 
   useEffect(() => {
     const fetchCollections = async () => {
       try {
         const fetchedCollections: Collection[] = await Promise.all(
           COLLECTIONS.map(async (collection) => {
-            const response = await fetch(`/api/categories?collectionId=${collection.id}`);
+            const response = await fetch(
+              `/api/categories?collectionId=${collection.id}`
+            );
             if (!response.ok) {
-              throw new Error(`Failed to fetch products for collection ${collection.id}`);
+              throw new Error(
+                `Failed to fetch products for collection ${collection.id}`
+              );
             }
             const data = await response.json();
             return {
@@ -79,6 +89,7 @@ const WishlistPage: React.FC = () => {
     fetchCollections();
   }, []);
 
+  // Horizontal scroll for collections
   useEffect(() => {
     const interval = setInterval(() => {
       if (scrollref.current) {
@@ -94,84 +105,108 @@ const WishlistPage: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Add product to wishlist (merges quantity if it already exists in wishlist)
   const handleAddToWishlist = (product: Product) => {
     setWishlist((prev) => {
       const existingProduct = prev.find((item) => item.id === product.id);
       if (existingProduct) {
+        // If it exists, update quantity
         return prev.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + product.quantity } : item
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + product.quantity }
+            : item
         );
       }
+      // Otherwise, add as new product
       return [...prev, { ...product }];
     });
   };
 
+  // Increment product quantity (both in collections and wishlist if present)
   const handleIncrement = (productId: number) => {
+    // Update in collections
     setCollections((prev) =>
-      prev.map((collection) => {
-        return {
-          ...collection,
-          products: collection.products.map((product) =>
-            product.id === productId
-              ? { ...product, quantity: product.quantity + 1 }
-              : product
-          ),
-        };
-      })
+      prev.map((collection) => ({
+        ...collection,
+        products: collection.products.map((product) =>
+          product.id === productId
+            ? { ...product, quantity: product.quantity + 1 }
+            : product
+        ),
+      }))
     );
-    setWishlist((prev) =>
-      prev.map((item) =>
-        item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
 
-  const handleDecrement = (productId: number) => {
-    setCollections((prev) =>
-      prev.map((collection) => {
-        return {
-          ...collection,
-          products: collection.products.map((product) =>
-            product.id === productId && product.quantity > 1
-              ? { ...product, quantity: product.quantity - 1 }
-              : product
-          ),
-        };
-      })
-    );
+    // Update in wishlist
     setWishlist((prev) =>
       prev.map((item) =>
-        item.id === productId && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
+        item.id === productId
+          ? { ...item, quantity: item.quantity + 1 }
           : item
       )
     );
   };
 
+  // Decrement product quantity (not going below 1)
+  const handleDecrement = (productId: number) => {
+    // Update in collections
+    setCollections((prev) =>
+      prev.map((collection) => ({
+        ...collection,
+        products: collection.products.map((product) =>
+          product.id === productId && product.quantity > 1
+            ? { ...product, quantity: product.quantity - 1 }
+            : product
+        ),
+      }))
+    );
+
+    // Update in wishlist
+    setWishlist((prev) =>
+      prev
+        .map((item) =>
+          item.id === productId && item.quantity > 1
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        )
+        .filter((item) => item.quantity > 0) // Remove item if quantity is 0
+    );
+  };
+
+  // Remove from wishlist
   const handleRemoveFromWishlist = (productId: number) => {
     setWishlist((prev) => prev.filter((item) => item.id !== productId));
   };
 
+  // Add custom product
   const handleAddCustomProduct = (e: React.FormEvent) => {
     e.preventDefault();
     if (!customProductName.trim()) return;
+
     const newProduct: Product = {
       id: customIdCounter++,
       title: customProductName,
       price: "N/A",
-      images: customProductURL ? [{ src: customProductURL }] : [],
-      quantity: 1,
+      images: [], // Custom products do not have images
+      quantity: customProductQuantity,
+      url: customProductRedirectURL ? customProductRedirectURL : undefined, // Assign redirect URL if provided
     };
+
     handleAddToWishlist(newProduct);
+
+    // Reset form
     setCustomProductName("");
-    setCustomProductURL("");
+    setCustomProductRedirectURL("");
+    setCustomProductQuantity(1);
   };
 
   return (
     <div className={styles.page}>
       <div className={styles.topBar}>
         <h1 className={styles.title}>Wishlist Page</h1>
-        <div className={styles.cartIconWrapper} onClick={() => setShowCartPreview(true)}>
+        <div
+          className={styles.cartIconWrapper}
+          onClick={() => setShowCartPreview(true)}
+        >
           <svg
             className={styles.cartIcon}
             xmlns="http://www.w3.org/2000/svg"
@@ -209,6 +244,7 @@ const WishlistPage: React.FC = () => {
         </div>
       )}
 
+      {/* Custom Product Section */}
       <div className={styles.addCustomProductSection}>
         <h3>Add a Custom Product</h3>
         <form onSubmit={handleAddCustomProduct} className={styles.customForm}>
@@ -218,14 +254,39 @@ const WishlistPage: React.FC = () => {
             value={customProductName}
             onChange={(e) => setCustomProductName(e.target.value)}
             className={styles.input}
+            required
           />
           <input
-            type="text"
-            placeholder="Product Image URL (optional)"
-            value={customProductURL}
-            onChange={(e) => setCustomProductURL(e.target.value)}
+            type="url"
+            placeholder="Product Redirect URL (optional)"
+            value={customProductRedirectURL}
+            onChange={(e) => setCustomProductRedirectURL(e.target.value)}
             className={styles.input}
           />
+
+          {/* Quantity Controls for Custom Product */}
+          <div className={styles.quantityControl}>
+            <button
+              type="button"
+              className={styles.decrementButton}
+              onClick={() =>
+                setCustomProductQuantity((qty) => Math.max(1, qty - 1))
+              }
+            >
+              -
+            </button>
+            <span className={styles.quantity}>{customProductQuantity}</span>
+            <button
+              type="button"
+              className={styles.incrementButton}
+              onClick={() =>
+                setCustomProductQuantity((qty) => qty + 1)
+              }
+            >
+              +
+            </button>
+          </div>
+
           <button type="submit" className={styles.button}>
             Add Product
           </button>
@@ -235,7 +296,10 @@ const WishlistPage: React.FC = () => {
       {selectedCollection && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <button className={styles.closeButton} onClick={() => setSelectedCollection(null)}>
+            <button
+              className={styles.closeButton}
+              onClick={() => setSelectedCollection(null)}
+            >
               &times;
             </button>
             <h2>{selectedCollection.title}</h2>
@@ -251,8 +315,11 @@ const WishlistPage: React.FC = () => {
                     />
                   )}
                   <p className={styles.productPrice}>Rs {product.price}</p>
+
+                  {/* Quantity Control for each product */}
                   <div className={styles.quantityControl}>
                     <button
+                      type="button"
                       className={styles.decrementButton}
                       onClick={() => handleDecrement(product.id)}
                     >
@@ -260,13 +327,16 @@ const WishlistPage: React.FC = () => {
                     </button>
                     <span className={styles.quantity}>{product.quantity}</span>
                     <button
+                      type="button"
                       className={styles.incrementButton}
                       onClick={() => handleIncrement(product.id)}
                     >
                       +
                     </button>
                   </div>
+
                   <button
+                    type="button"
                     className={styles.button}
                     onClick={() => handleAddToWishlist(product)}
                   >
@@ -293,12 +363,59 @@ const WishlistPage: React.FC = () => {
               <ul className={styles.wishlistPreview}>
                 {wishlist.map((product) => (
                   <li key={product.id} className={styles.wishlistItem}>
-                    <span>{product.title}</span>
-                    <span className={styles.productPrice}>
-                      {product.price !== "N/A" ? `Rs ${product.price}` : "No Price"}
-                    </span>
-                    <span>Quantity: {product.quantity}</span>
+                    {/* Display Image if available and not a custom product */}
+                    {product.images.length > 0 && (
+                      <img
+                        src={product.images[0].src}
+                        alt={product.title}
+                        className={styles.wishlistImage}
+                      />
+                    )}
+
+                    {/* Product Details */}
+                    <div className={styles.wishlistDetails}>
+                      {/* Product Title with Redirect if URL is provided */}
+                      {product.url ? (
+                        <a
+                          href={product.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.productLink}
+                        >
+                          {product.title}
+                        </a>
+                      ) : (
+                        <span>{product.title}</span>
+                      )}
+
+                      <span className={styles.productPrice}>
+                        {product.price !== "N/A" ? `Rs ${product.price}` : "No Price"}
+                      </span>
+
+                      {/* Quantity Control in Wishlist Preview */}
+                      <div className={styles.quantityControl}>
+                        <button
+                          type="button"
+                          className={styles.decrementButton}
+                          onClick={() => handleDecrement(product.id)}
+                        >
+                          -
+                        </button>
+                        <span className={styles.quantity}>
+                          {product.quantity}
+                        </span>
+                        <button
+                          type="button"
+                          className={styles.incrementButton}
+                          onClick={() => handleIncrement(product.id)}
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
                     <button
+                      type="button"
                       className={styles.removeButton}
                       onClick={() => handleRemoveFromWishlist(product.id)}
                     >
