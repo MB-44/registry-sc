@@ -1,4 +1,5 @@
 import mongoose, { Schema, model, models } from "mongoose";
+import { title } from "process";
 
 interface IRegistry {
     firstName: string;
@@ -16,6 +17,16 @@ interface IRegistry {
     guests?: number;
     invitationLink?: string;
     accessCode?: string;
+    wishlist: Product[];
+}
+
+interface Product { 
+    id: number;
+    title: string;
+    price: string;
+    images: { src: string }[];
+    quantity: number;
+    url?: string;
 }
 
 const RegistrySchema = new Schema<IRegistry>({
@@ -33,7 +44,17 @@ const RegistrySchema = new Schema<IRegistry>({
     updatedAt: {type: Date, default: Date.now},
     guests: {type: Number},
     invitationLink: {type: String},
-    accessCode: {type: String}
+    accessCode: {type: String},
+    wishlist: [
+        {
+            id: {type: Number},
+            title: {type: String},
+            price: {type: String},
+            images: [{src: {type: String}}],
+            quantity: {type: Number},
+            url: {type: String}
+        }
+    ]
 });
 
 const Registry = models.Registry || model<IRegistry>("Registry", RegistrySchema);

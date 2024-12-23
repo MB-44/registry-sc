@@ -24,6 +24,7 @@ const CreateRegistry: React.FC = () => {
     guests: 0,
   });
 
+  const [wishlist, setwishlist] = useState([]);
   const [message, setMessage] = useState<string | null>(null); // **(ADDED)**
   const [error, setError] = useState<string | null>(null); // **(ADDED)**
 
@@ -83,6 +84,7 @@ const CreateRegistry: React.FC = () => {
       setError("An error occurred while creating the registry.");
     }
   };
+
 
   return (
     <div className={styles.pageContainer}>

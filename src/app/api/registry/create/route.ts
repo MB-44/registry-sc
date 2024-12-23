@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
       postalCode,
       deliveryDate,
       specialDate,
-      guests
+      guests,
     });
 
     await newRegistry.save();
