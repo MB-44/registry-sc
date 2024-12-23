@@ -25,7 +25,8 @@ export async function POST(req: NextRequest) {
       postalCode,
       deliveryDate,
       specialDate,
-      guests
+      guests,
+      wishlist
     } = body;
 
     if (
@@ -63,6 +64,8 @@ export async function POST(req: NextRequest) {
       deliveryDate,
       specialDate,
       guests,
+      wishlist: wishlist || [],
+      accessCode
     });
 
     await newRegistry.save();
@@ -76,7 +79,9 @@ export async function POST(req: NextRequest) {
     await newRegistry.save();
 
     return NextResponse.json({ 
-        message: "Registry created successfully!" 
+        message: "Registry created successfully!", 
+        invitationLink,
+        accessCode
     });
   } catch (error) {
     console.error("Error creating registry:", error);

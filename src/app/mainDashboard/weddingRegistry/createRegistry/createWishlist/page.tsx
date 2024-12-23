@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./page.module.css";
 
 interface Product {
@@ -37,6 +37,9 @@ let customIdCounter = 100000; // For unique IDs for custom products
 
 const WishlistPage: React.FC = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const registryId = searchParams.get("registryId");
+
   const [collections, setCollections] = useState<Collection[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(
@@ -202,8 +205,12 @@ const WishlistPage: React.FC = () => {
   };
 
   const handleSaveAndContinue = async () => {
+    if (!registryId) {
+      console.error("Registry ID not found");
+      return;
+    }
     try {
-      const response = await fetch("/api/registry/create", {
+      const response = await fetch(`/api/registry/${registryId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ wishlist }),
@@ -453,7 +460,7 @@ const WishlistPage: React.FC = () => {
     <div className={styles.footer}>
       <button 
         className={styles.backButton}
-        onClick={() => router.push("/weddingRegistry/createRegistry")}
+        onClick={() => router.push("/createRegistry/invitation")}
         >
         Back
       </button>

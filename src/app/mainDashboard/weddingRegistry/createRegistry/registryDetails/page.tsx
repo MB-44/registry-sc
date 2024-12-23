@@ -38,6 +38,7 @@ const RegistryDetailsPage: React.FC = () => {
     const fetchRegistryDetails = async () => {
       try {
         const response = await fetch("/api/registry/details"); // Adjust the API route as needed
+        
         if (!response.ok) {
           throw new Error("Failed to fetch registry details");
         }

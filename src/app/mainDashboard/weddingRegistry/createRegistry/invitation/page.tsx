@@ -7,13 +7,14 @@ import styles from "./page.module.css";
 const InvitationPage = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
+
+    const registryId = searchParams.get("registryId");
     const link = searchParams.get("link");
     const code = searchParams.get("code");
     // const { link, code } = searchParams;
 
     const handleCopy = (text: string) => {
         navigator.clipboard.writeText(text);
-        // alert("Copied to clipboard!");
     };
 
     return (
@@ -40,7 +41,13 @@ const InvitationPage = () => {
             </button>
             </div>
 
-      <button onClick={() => router.push("/mainDashboard/weddingRegistry/createRegistry/createWishlist")} className={styles.button}>
+      <button 
+        onClick={() => 
+            router.push(
+                `/mainDashboard/weddingRegistry/createRegistry/createWishlist?registryId=${registryId}`
+                )
+            } 
+            className={styles.button}>
         Go to Wishlist Creation
       </button>
     </div>
