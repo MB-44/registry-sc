@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./page.module.css";
 
 interface Product {
@@ -9,7 +10,7 @@ interface Product {
   price: string;
   images: { src: string }[];
   quantity: number;
-  url?: string; // Optional URL for redirecting
+  url?: string; 
 }
 
 interface Collection {
@@ -35,6 +36,10 @@ const COLLECTIONS = [
 let customIdCounter = 100000; // For unique IDs for custom products
 
 const WishlistPage: React.FC = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const registryId = searchParams.get("registryId");
+
   const [collections, setCollections] = useState<Collection[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(
@@ -199,6 +204,28 @@ const WishlistPage: React.FC = () => {
     setCustomProductQuantity(1);
   };
 
+  const handleSaveAndContinue = async () => {
+    if (!registryId) {
+      console.error("Registry ID not found");
+      return;
+    }
+    try {
+      const response = await fetch(`/api/registry/${registryId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ wishlist }),
+      });
+  
+      if (response.ok) {
+        router.push("mainDashboard/weddingRegistry/createRegistry/registryDetails"); // Updated navigation
+      } else {
+        console.error("Failed to save registry");
+      }
+    } catch (err) {
+      console.error("An error occurred while saving the registry:", err);
+    }
+  };  
+
   return (
     <div className={styles.page}>
       <div className={styles.topBar}>
@@ -258,7 +285,7 @@ const WishlistPage: React.FC = () => {
           />
           <input
             type="url"
-            placeholder="Product Redirect URL (optional)"
+            placeholder="Product URL (optional)"
             value={customProductRedirectURL}
             onChange={(e) => setCustomProductRedirectURL(e.target.value)}
             className={styles.input}
@@ -430,6 +457,23 @@ const WishlistPage: React.FC = () => {
           </div>
         </div>
       )}
+    <div className={styles.footer}>
+      <button 
+        className={styles.backButton}
+        onClick={() => router.push("/createRegistry/invitation")}
+        >
+        Back
+      </button>
+      <button
+        className={styles.saveContinueButton}
+        onClick={() => {
+          handleSaveAndContinue();
+        }}
+      >
+        Save & Continue
+      </button>
+    </div>
+
     </div>
   );
 };

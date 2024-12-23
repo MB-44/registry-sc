@@ -24,6 +24,7 @@ const CreateRegistry: React.FC = () => {
     guests: 0,
   });
 
+  // const [wishlist, setwishlist] = useState([]);
   const [message, setMessage] = useState<string | null>(null); // **(ADDED)**
   const [error, setError] = useState<string | null>(null); // **(ADDED)**
 
@@ -52,7 +53,7 @@ const CreateRegistry: React.FC = () => {
     setMessage(null);
     setError(null);
 
-    console.log("Form Data being submitted:", formData);
+    // console.log("Form Data being submitted:", formData);
 
     try {
       const response = await fetch("/api/registry/create", {
@@ -75,14 +76,18 @@ const CreateRegistry: React.FC = () => {
       } else {
         setMessage(data.message);
 
-        const { invitationLink, accessCode } = data;
-        // router.push(`/mainDashboard/weddingRegistry/invitation?link=${encodeURIComponent(invitationLink)}&code=${encodeURIComponent(accessCode)}`);
-        router.push(`/mainDashboard/weddingRegistry/createRegistry/invitation`);
+        const { registryId, invitationLink, accessCode } = data;
+        router.push(
+          // `/mainDashboard/weddingRegistry/invitation?registryId=${registryId(invitationLink)}&link=${encodeURIComponent(invitationLink)}&code=${encodeURIComponent(accessCode)}`
+          `/mainDashboard/weddingRegistry/createRegistry/invitation`
+        );
       }
     } catch (err) {
+      console.error("Error creating registry:", err);
       setError("An error occurred while creating the registry.");
     }
   };
+
 
   return (
     <div className={styles.pageContainer}>

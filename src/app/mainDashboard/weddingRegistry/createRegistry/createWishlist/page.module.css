@@ -287,3 +287,32 @@
   gap: 5px;
   flex: 1;
 }
+
+.footer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.backButton,
+.saveContinueButton {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.backButton:hover {
+  background-color: #0056b3;
+}
+
+.saveContinueButton:hover {
+  background-color: #28a745; /* Green for Save & Continue */
+}
