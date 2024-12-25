@@ -1,25 +1,15 @@
-import { NextResponse } from "next/server";
-import clientPromise from "../../../lib/mongodb";
+import { NextRequest, NextResponse } from "next/server";
+import { connectToDB } from "@/lib/db";
 
-export const runtime = "nodejs";
-
-export async function GET() {
+export async function GET(req: NextRequest){
   try {
-    const client = await clientPromise;
-    const db = client.db("weddingRegistry"); 
-
-    const collections = await db.listCollections().toArray();
-
-    return NextResponse.json({
-      success: true,
-      message: "Database connected successfully!",
-      collections,
-    });
+    await connectToDB();
+    return NextResponse.json({ message: "Mongo db connected successfully!" });
   } catch (error) {
-    return NextResponse.json({
-      success: false,
-      message: "Database connection failed!",
-      error: (error as Error).message,
-    });
+    console.error("Error connecting to MongoDB:", error);
+    return NextResponse.json(
+      { error: "Failed to connect to MongoDB." },
+      { status: 500 }
+    );
   }
 }

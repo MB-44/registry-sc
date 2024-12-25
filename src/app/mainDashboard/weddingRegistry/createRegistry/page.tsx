@@ -78,8 +78,9 @@ const CreateRegistry: React.FC = () => {
 
         const { registryId, invitationLink, accessCode } = data;
         router.push(
+          `/mainDashboard/weddingRegistry/createRegistry/invitation?registryId=${registryId}&link=${encodeURIComponent(invitationLink)}&code=${encodeURIComponent(accessCode)}`
           // `/mainDashboard/weddingRegistry/invitation?registryId=${registryId(invitationLink)}&link=${encodeURIComponent(invitationLink)}&code=${encodeURIComponent(accessCode)}`
-          `/mainDashboard/weddingRegistry/createRegistry/invitation`
+          // `/mainDashboard/weddingRegistry/createRegistry/invitation`
         );
       }
     } catch (err) {

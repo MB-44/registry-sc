@@ -1,4 +1,4 @@
-import mongoose, { Schema, model, models } from "mongoose";
+import mongoose, { Schema, model, models, Document } from "mongoose";
 import { title } from "process";
 
 interface IRegistry {
