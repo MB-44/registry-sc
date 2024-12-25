@@ -38,6 +38,7 @@ let customIdCounter = 100000; // For unique IDs for custom products
 const WishlistPage: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const registryId = searchParams.get("registryId");
 
   const [collections, setCollections] = useState<Collection[]>([]);

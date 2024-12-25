@@ -10,7 +10,6 @@ export async function PATCH(
     await connectToDB();
     const { wishlist } = await req.json();
 
-    // Find existing registry by ID
     const registry = await Registry.findById(params.id);
     if (!registry) {
       return NextResponse.json(
@@ -19,7 +18,6 @@ export async function PATCH(
       );
     }
 
-    // Update wishlist
     registry.wishlist = wishlist;
     await registry.save();
 

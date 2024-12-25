@@ -35,12 +35,12 @@ export async function POST(req: NextRequest) {
         !partnerFirstName || 
         !partnerLastName || 
         !address || 
-        !address2 ||
+       - !address2 ||
         !city || 
         !postalCode || 
         !deliveryDate ||
         !specialDate ||
-        !guests
+       - !guests
     ) {
       return NextResponse.json
       (
@@ -80,6 +80,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ 
         message: "Registry created successfully!", 
+        registryId: newRegistry._id.toString(),
         invitationLink,
         accessCode
     });
