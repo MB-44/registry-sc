@@ -4,11 +4,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./page.module.css";
 
+interface Image {
+  src: string;
+}
+
 interface Product {
   id: number;
   title: string;
   price: string;
-  images: { src: string }[];
+  images: Image[];
   quantity: number;
   url?: string; 
 }
@@ -33,7 +37,7 @@ const COLLECTIONS = [
   { id: 463444508971, title: "Home Aroma" },
 ];
 
-let customIdCounter = 100000; // For unique IDs for custom products
+let customIdCounter = 100000; // Counter for custom product IDs
 
 const WishlistPage: React.FC = () => {
   const router = useRouter();
@@ -208,22 +212,36 @@ const WishlistPage: React.FC = () => {
   const handleSaveAndContinue = async () => {
     if (!registryId) {
       console.error("Registry ID not found");
+      setError("Registry ID not found");
       return;
     }
     try {
+      console.log("Registry ID: ",registryId);
+      console.log("Wishlist Payload: ", wishlist);
+
       const response = await fetch(`/api/registry/${registryId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ wishlist }),
       });
   
-      if (response.ok) {
-        router.push("mainDashboard/weddingRegistry/createRegistry/registryDetails"); // Updated navigation
-      } else {
-        console.error("Failed to save registry");
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error: ", errorData.error);
+        throw new Error(errorData.error || "Failed to save registry");
+      } 
+      
+      const data = await response.json();
+      console.log("Registry Data: ", data);
+
+      if (!data.registry) {
+        throw new Error("Invalid API response: Missing registry data");
       }
-    } catch (err) {
-      console.error("An error occurred while saving the registry:", err);
+
+      router.push(`/mainDashboard/weddingRegistry/createRegistry/registryDetails?registryId=${registryId}`); // Updated navigation
+    } catch (err: any) {
+      console.error("Failed to save registry:", err.message);
+      setError(err.message || "An error occurred while saving registry"); 
     }
   };  
 

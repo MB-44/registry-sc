@@ -1,7 +1,20 @@
 import mongoose, { Schema, model, models, Document } from "mongoose";
 import { title } from "process";
 
-interface IRegistry {
+export interface Image {
+    src: string;
+}
+
+export interface Product { 
+    id: number;
+    title: string;
+    price: string;
+    images: { src: string }[];
+    quantity: number;
+    url?: string;
+}
+
+export interface IRegistry extends Document {
     firstName: string;
     lastName: string;
     partnerFirstName: string;
@@ -12,51 +25,49 @@ interface IRegistry {
     postalCode: string;
     deliveryDate: Date;
     specialDate: Date;
-    createdAt: Date;
-    updatedAt: Date;
     guests?: number;
     invitationLink?: string;
     accessCode?: string;
     wishlist: Product[];
+    createdAt: Date;
+    updatedAt: Date;
 }
 
-interface Product { 
-    id: number;
-    title: string;
-    price: string;
-    images: { src: string }[];
-    quantity: number;
-    url?: string;
-}
-
-const RegistrySchema = new Schema<IRegistry>({
-    firstName: { type: String, required: true},
-    lastName: { type: String, required: true},
-    partnerFirstName: {type: String, required: true},
-    partnerLastName: {type: String, required: true},
-    address: {type: String, required: true},
-    address2: {type: String},
-    city: {type: String, required: true},
-    postalCode: {type: String, required: true},
-    deliveryDate: {type: Date, require: true},
-    specialDate: {type: Date, require: true},
-    createdAt: {type: Date, default: Date.now},
-    updatedAt: {type: Date, default: Date.now},
-    guests: {type: Number},
-    invitationLink: {type: String},
-    accessCode: {type: String},
-    wishlist: [
-        {
-            id: {type: Number},
-            title: {type: String},
-            price: {type: String},
-            images: [{src: {type: String}}],
-            quantity: {type: Number},
-            url: {type: String}
-        }
-    ]
+const ImageSchema: Schema = new Schema({
+    src: { type: String, required: true },
 });
 
-const Registry = models.Registry || model<IRegistry>("Registry", RegistrySchema);
+const ProductSchema: Schema = new Schema({
+    id: { type: Number, required: true },
+    title: { type: String, required: true },
+    price: { type: String, required: true },
+    images:{ type: [ImageSchema], required: true}, 
+    quantity: { type: Number, required: true },
+    url: { type: String },
+})
+
+const RegistrySchema: Schema = new Schema(
+    {
+        firstName: { type: String, required: true},
+        lastName: { type: String, required: true},
+        partnerFirstName: {type: String, required: true},
+        partnerLastName: {type: String, required: true},
+        address: {type: String, required: true},
+        address2: {type: String},
+        city: {type: String, required: true},
+        postalCode: {type: String, required: true},
+        deliveryDate: {type: Date, require: true},
+        specialDate: {type: Date, require: true},
+        guests: {type: Number},
+        invitationLink: {type: String},
+        accessCode: {type: String},
+        wishlist: {type: [ProductSchema], required: true},
+        createdAt: {type: Date, default: Date.now},
+        updatedAt: {type: Date, default: Date.now},
+    },
+    {timestamps: true}
+);
+
+const Registry = mongoose.models.Registry || mongoose.model<IRegistry>("Registry", RegistrySchema);
 
 export default Registry;
