@@ -13,9 +13,29 @@ const InvitationPage = () => {
     const code = searchParams.get("code");
     // const { link, code } = searchParams;
 
-    const handleCopy = (text: string) => {
-        navigator.clipboard.writeText(text);
-    };
+    // const handleCopy = (text: string) => {
+    //     navigator.clipboard.writeText(text);
+    // };
+
+    const handleCopyLink = (text: string) => {
+        if (!link) {
+            navigator.clipboard.writeText(text);
+            alert("Link copied to clipboard");
+        }
+    }
+
+    const handleCopyCode = (text: string) => {
+        if (!code) {
+            navigator.clipboard.writeText(text);
+            alert("Code copied to clipboard");
+        }
+    }
+
+    const handleGoToWishlist = () => {
+        if (registryId) {
+            router.push(`/mainDashboard/weddingRegistry/createRegistry/createWishlist?registryId=${registryId}`);
+        }
+    }
 
     return (
         <div className={styles.container}>
@@ -28,7 +48,7 @@ const InvitationPage = () => {
             </p>
             <div className={styles.copyWrapper}>
             <input type="text" value={link || ""} readOnly className={styles.input} />
-            <button onClick={() => handleCopy(link || "")} className={styles.copyButton}>
+            <button onClick={() => handleCopyLink(link || "")} className={styles.copyButton}>
                 Copy
             </button>
             </div>
@@ -36,18 +56,12 @@ const InvitationPage = () => {
             <p>
                 <strong>Access Code:</strong> <span className={styles.code}>{code}</span>
             </p>
-            <button onClick={() => handleCopy(code || "")} className={styles.copyButton}>
+            <button onClick={() => handleCopyCode(code || "")} className={styles.copyButton}>
                 Copy Access Code
             </button>
             </div>
 
-      <button 
-        onClick={() => 
-            router.push(
-                `/mainDashboard/weddingRegistry/createRegistry/createWishlist?registryId=${registryId}`
-                )
-            } 
-            className={styles.button}>
+      <button onClick={handleGoToWishlist} className={styles.button}>
         Go to Wishlist Creation
       </button>
     </div>
