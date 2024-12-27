@@ -1,40 +1,124 @@
-.container {
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .section {
-    margin-bottom: 20px;
-  }
-  
-  .section h2 {
-    font-size: 1.5rem;
-    color: #333;
-  }
-  
-  .wishlist {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .wishlistItem {
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  .itemDetails {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .link {
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .link:hover {
-    text-decoration: underline;
-  }
-  
+/* page.module.css */
+
+.page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: sans-serif;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Loading & Error states */
+.loading,
+.noRegistryFound {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.errorContainer {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.errorText {
+  color: #b71c1c;
+  font-weight: bold;
+}
+
+/* Sections & Headings */
+.section {
+  margin-bottom: 2rem;
+  border: 1px solid #ccc;
+  padding: 1.5rem;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #777;
+  padding-bottom: 0.5rem;
+  color: #333;
+}
+
+/* Information Rows */
+.infoRow {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.infoLabel {
+  width: 130px;
+  font-weight: bold;
+  color: #444;
+}
+
+.infoValue {
+  flex: 1;
+  color: #666;
+}
+
+/* Links */
+.link {
+  color: #1e88e5;
+  text-decoration: underline;
+  word-break: break-all; /* helps with long URLs */
+}
+
+/* Wishlist */
+.wishlist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.wishlistItem {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #eee;
+}
+
+.productHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.productTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #444;
+}
+
+.productPrice {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #039be5;
+}
+
+.productImage {
+  width: 150px;       /* Smaller size for images */
+  height: auto;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+}
+
+.productQuantity {
+  margin: 0.5rem 0;
+  color: #555;
+}
+
+.productLinkRow {
+  color: #666;
+}
