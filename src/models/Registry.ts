@@ -1,5 +1,4 @@
 import mongoose, { Schema, model, models, Document } from "mongoose";
-import { title } from "process";
 
 export interface Image {
     src: string;
@@ -37,6 +36,12 @@ const ImageSchema: Schema = new Schema({
     src: { type: String, required: true },
 });
 
+const RemarkSchema = new Schema({
+    guestName: { type: String, required: true },
+    productId: { type: Number, required: true },
+    quantity: { type: Number, required: true },
+})
+
 const ProductSchema: Schema = new Schema({
     id: { type: Number, required: true },
     title: { type: String, required: true },
@@ -44,7 +49,8 @@ const ProductSchema: Schema = new Schema({
     images:{ type: [ImageSchema], required: true}, 
     quantity: { type: Number, required: true },
     url: { type: String },
-})
+    remarks: { type: [RemarkSchema], default: [] },
+});
 
 const RegistrySchema: Schema = new Schema(
     {

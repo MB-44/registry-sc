@@ -44,7 +44,7 @@ interface Registry {
   updatedAt: string;    
 }
 
-const RegistryDetailsPage: React.FC = () => {
+const InviteRegistryPage: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -53,38 +53,70 @@ const RegistryDetailsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchRegistryDetails = async () => {
+  // Guest remark form
+  const [guestName, setGuestName] = useState("");
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+  const [quantity, setQuantity] = useState(1);
+
+  const fetchRegistry = async () => {
     if (!registryId) {
-      setError("Registry ID not found.");
+      setError("Registry ID not provided.");
       setLoading(false);
       return;
     }
-
     try {
       const response = await fetch(`/api/registry/${registryId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
-
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to fetch registry details.");
       }
-
       const data = await response.json();
       setRegistry(data.registry);
     } catch (err: any) {
       console.error("Error fetching registry details:", err.message);
-      setError(err.message || "An error occurred while fetching registry details.");
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // Poll for real-time updates (simple approach)
   useEffect(() => {
-    fetchRegistryDetails();
-  }, [registryId]);
+    fetchRegistry();
+    }, [registryId]);
+
+  const handleRemark = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!guestName || !selectedProductId || quantity < 1) {
+      alert("Please provide your name, select a product, and enter a valid quantity.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/registry/invite/${registryId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ guestName, productId: selectedProductId, quantity }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to mark wishlist item.");
+      }
+
+      const data = await response.json();
+      setRegistry(data.registry);
+      setGuestName("");
+      setSelectedProductId(null);
+      setQuantity(1);
+      alert("Your selection has been recorded!");
+    } catch (err: any) {
+      console.error("Error marking wishlist item:", err.message);
+      alert(err.message);
+    }
+  };
 
   if (loading) {
     return <p className={styles.loading}>Loading registry details...</p>;
@@ -107,7 +139,6 @@ const RegistryDetailsPage: React.FC = () => {
     );
   }
 
-  // Format Date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString(undefined, {
@@ -119,84 +150,29 @@ const RegistryDetailsPage: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>Registry Details</h1>
-
-      {/* Edit Button to navigate to Edit page */}
-      <button
-        className={styles.editButton}
-        onClick={() =>
-          router.push(`/mainDashboard/weddingRegistry/createRegistry/editRegistry?registryId=${registryId}`)
-        }
-      >
-        Edit Registry
-      </button>
+      <h1 className={styles.title}>Wedding Registry</h1>
 
       {/* Couple Info */}
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Couple Information</h2>
-        <div className={styles.infoRow}>
-          <p className={styles.infoLabel}>Name:</p>
-          <p className={styles.infoValue}>
-            {registry.firstName} {registry.lastName}
-          </p>
-        </div>
-        <div className={styles.infoRow}>
-          <p className={styles.infoLabel}>Partner:</p>
-          <p className={styles.infoValue}>
-            {registry.partnerFirstName} {registry.partnerLastName}
-          </p>
-        </div>
+        <p>{registry.firstName} {registry.lastName} &amp; {registry.partnerFirstName} {registry.partnerLastName}</p>
       </div>
 
       {/* Address */}
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Delivery Address</h2>
-        <p className={styles.infoValue}>
+        <p>
           {registry.address}
-          {registry.address2 ? `, ${registry.address2}` : ""}, {registry.city},{" "}
-          {registry.postalCode}
+          {registry.address2 ? `, ${registry.address2}` : ""}, {registry.city}, {registry.postalCode}
         </p>
       </div>
 
-      {/* Dates & Guests */}
+      {/* Dates */}
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Important Dates</h2>
-        <div className={styles.infoRow}>
-          <p className={styles.infoLabel}>Delivery Date:</p>
-          <p className={styles.infoValue}>{formatDate(registry.deliveryDate)}</p>
-        </div>
-        <div className={styles.infoRow}>
-          <p className={styles.infoLabel}>Special Date:</p>
-          <p className={styles.infoValue}>{formatDate(registry.specialDate)}</p>
-        </div>
-        <div className={styles.infoRow}>
-          <p className={styles.infoLabel}>Guests:</p>
-          <p className={styles.infoValue}>{registry.guests || "N/A"}</p>
-        </div>
-      </div>
-
-      {/* Access */}
-      <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Registry Access</h2>
-        <div className={styles.infoRow}>
-          <p className={styles.infoLabel}>Access Code:</p>
-          <p className={styles.infoValue}>{registry.accessCode}</p>
-        </div>
-        {registry.invitationLink && (
-          <div className={styles.infoRow}>
-            <p className={styles.infoLabel}>Invitation Link:</p>
-            <p className={styles.infoValue}>
-              <a
-                href={registry.invitationLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.link}
-              >
-                {registry.invitationLink}
-              </a>
-            </p>
-          </div>
-        )}
+        <p><strong>Delivery Date:</strong> {formatDate(registry.deliveryDate)}</p>
+        <p><strong>Special Date:</strong> {formatDate(registry.specialDate)}</p>
+        <p><strong>Guests:</strong> {registry.guests || "N/A"}</p>
       </div>
 
       {/* Wishlist */}
@@ -211,25 +187,20 @@ const RegistryDetailsPage: React.FC = () => {
                   <p className={styles.productPrice}>Rs {product.price}</p>
                 </div>
                 {product.images.length > 0 && (
-                  <img
+                  <img 
                     src={product.images[0].src}
                     alt={product.title}
                     className={styles.productImage}
                   />
                 )}
-                <p className={styles.productQuantity}>
-                  Available Quantity: {product.quantity}
-                </p>
+                <p className={styles.productQuantity}>Available: {product.quantity}</p>
 
-                {/* Display remarks from guests */}
                 {product.remarks.length > 0 && (
                   <div className={styles.remarksSection}>
-                    <h4>Remarks:</h4>
+                    <h4>Already Taken:</h4>
                     <ul>
-                      {product.remarks.map((remark, i) => (
-                        <li key={i}>
-                          {remark.guestName} will get {remark.quantity} {product.title}(s)
-                        </li>
+                      {product.remarks.map((r, i) => (
+                        <li key={i}>{r.guestName} took {r.quantity}</li>
                       ))}
                     </ul>
                   </div>
@@ -241,8 +212,53 @@ const RegistryDetailsPage: React.FC = () => {
           <p>No items in the wishlist.</p>
         )}
       </div>
+
+      {/* Guest Mark Form */}
+      <div className={styles.section}>
+        <h2 className={styles.sectionTitle}>I Will Get...</h2>
+        <form className={styles.guestForm} onSubmit={handleRemark}>
+          <div className={styles.formGroup}>
+            <label>Your Name:</label>
+            <input 
+              type="text" 
+              value={guestName} 
+              onChange={(e) => setGuestName(e.target.value)} 
+              required
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>Select Product:</label>
+            <select
+              value={selectedProductId || ""}
+              onChange={(e) => setSelectedProductId(Number(e.target.value))}
+              required
+            >
+              <option value="" disabled>Select a product</option>
+              {registry.wishlist.map((product) => (
+                <option key={product.id} value={product.id}>
+                  {product.title} (Available: {product.quantity})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>Quantity:</label>
+            <input 
+              type="number" 
+              min={1} 
+              value={quantity} 
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              required
+            />
+          </div>
+
+          <button type="submit" className={styles.submitButton}>Mark Item</button>
+        </form>
+      </div>
     </div>
   );
 };
 
-export default RegistryDetailsPage;
+export default InviteRegistryPage;

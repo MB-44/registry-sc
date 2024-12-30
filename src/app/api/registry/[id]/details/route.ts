@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectToDB from "@/lib/db";
 import Registry from "@/models/Registry";
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: any) {
   try {
     await connectToDB();
     const registry = await Registry.findById(params.id).lean();
@@ -14,7 +14,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     }
     return NextResponse.json(registry);
   } catch (error) {
-    // console.error("Error fetching registry:", error);
     return NextResponse.json(
         { error: "Failed to fetch registry." }, 
         { status: 500 }
