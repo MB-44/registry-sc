@@ -27,8 +27,8 @@ const NavigationBar: React.FC = () => {
           <Image 
             src="/images/logo.png" 
             alt="logo" 
-            width={110} 
-            height={55} 
+            width={30} 
+            height={25} 
           />
         </a>
       </div>

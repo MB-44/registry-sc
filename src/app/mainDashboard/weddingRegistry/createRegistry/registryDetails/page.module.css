@@ -1,62 +1,54 @@
-/* page.module.css */
+/* root/src/app/mainDashboard/weddingRegistry/createRegistry/registryDetails/page.module.css */
 
 .page {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 2rem;
-  font-family: sans-serif;
+  font-family: 'Times New Roman', Times, serif;
 }
 
 .title {
   font-size: 2rem;
-  font-weight: bold;
+  text-align: center;
   margin-bottom: 1.5rem;
-  text-align: center;
+  color: #333;
 }
 
-/* Loading & Error states */
-.loading,
-.noRegistryFound {
-  text-align: center;
-  margin-top: 2rem;
+.editButton {
+  background-color: #1e88e5;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 1.5rem;
 }
 
-.errorContainer {
-  margin-top: 2rem;
-  text-align: center;
+.editButton:hover {
+  background-color: #1565c0;
 }
 
-.errorText {
-  color: #b71c1c;
-  font-weight: bold;
-}
-
-/* Sections & Headings */
 .section {
   margin-bottom: 2rem;
-  border: 1px solid #ccc;
   padding: 1.5rem;
+  border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #fafafa;
 }
 
 .sectionTitle {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.5rem;
   margin-bottom: 1rem;
-  border-bottom: 2px solid #777;
-  padding-bottom: 0.5rem;
-  color: #333;
+  color: #555;
 }
 
-/* Information Rows */
 .infoRow {
   display: flex;
   margin-bottom: 0.5rem;
 }
 
 .infoLabel {
-  width: 130px;
+  width: 140px;
   font-weight: bold;
   color: #444;
 }
@@ -66,14 +58,12 @@
   color: #666;
 }
 
-/* Links */
 .link {
   color: #1e88e5;
   text-decoration: underline;
-  word-break: break-all; /* helps with long URLs */
+  word-wrap: break-word;
 }
 
-/* Wishlist */
 .wishlist {
   list-style: none;
   padding: 0;
@@ -81,11 +71,11 @@
 }
 
 .wishlistItem {
-  margin-bottom: 1.5rem;
   padding: 1rem;
-  background-color: #ffffff;
+  border: 1px solid #ddd;
   border-radius: 6px;
-  border: 1px solid #eee;
+  margin-bottom: 1rem;
+  background-color: #fff;
 }
 
 .productHeader {
@@ -95,30 +85,42 @@
 }
 
 .productTitle {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0;
-  color: #444;
+  font-size: 1.2rem;
+  color: #333;
 }
 
 .productPrice {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #039be5;
+  font-size: 1.1rem;
+  color: #1e88e5;
 }
 
 .productImage {
-  width: 150px;       /* Smaller size for images */
+  width: 150px;
   height: auto;
   margin-top: 0.5rem;
   border-radius: 4px;
 }
 
 .productQuantity {
-  margin: 0.5rem 0;
+  margin-top: 0.5rem;
   color: #555;
 }
 
-.productLinkRow {
-  color: #666;
+.remarksSection {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+}
+
+.loading,
+.errorContainer,
+.noRegistryFound {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.errorText {
+  color: #b71c1c;
+  font-weight: bold;
 }

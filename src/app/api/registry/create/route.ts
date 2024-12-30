@@ -64,14 +64,12 @@ export async function POST(req: NextRequest) {
 
     await newRegistry.save();
 
-    const invitationLink = `${process.env.BASE_URL}/registry/${newRegistry._id}`;
-    
-    // invitationlink + accesscode
+    // const invitationLink = `${process.env.BASE_URL}/registry/${newRegistry._id}`;
+    const invitationLink = `${process.env.BASE_URL}/mainDashboard/weddingRegistry/createRegistry/inviteRegistry?registryId=${newRegistry._id}`;
+
     newRegistry.invitationLink = invitationLink;
     newRegistry.accessCode = accessCode;
     await newRegistry.save();
-
-    // console.log("New registry created: ", newRegistry)
 
     return NextResponse.json({
       message: "Registry created successfully!",
@@ -80,7 +78,6 @@ export async function POST(req: NextRequest) {
       accessCode,
     });
   } catch (error) {
-    // console.error("Error creating registry:", error);
     return NextResponse.json(
         { error: "Failed to create registry." }, 
         { status: 500 }

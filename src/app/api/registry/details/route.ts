@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import connectToDB from "@/lib/db";
 import Registry from "@/models/Registry";
 
-export async function GET(req: NextRequest) {
+export async function GET(
+  req: NextRequest,
+  {params}: any,
+) {
   try {
     await connectToDB();
     const registry = await Registry.findOne({}).lean();
