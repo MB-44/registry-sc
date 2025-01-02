@@ -1,5 +1,3 @@
-// root/src/app/api/registry/invite/[id]/route.ts
-
 import { NextRequest, NextResponse } from "next/server";
 import connectToDB from "@/lib/db";
 import Registry from "@/models/Registry";
@@ -34,10 +32,8 @@ export async function POST(
       return NextResponse.json({ error: "Requested quantity exceeds available stock." }, { status: 400 });
     }
 
-    // Deduct the quantity
     product.quantity -= quantity;
 
-    // Add a remark
     product.remarks.push({ guestName, productId, quantity });
 
     await registry.save();

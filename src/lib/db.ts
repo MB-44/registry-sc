@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-// import { error } from "console";
-// import { buffer } from "stream/consumers";
 
 const MONGODB_URI = process.env.MONGODB_URI || "your_mongodb_connection_string";
 

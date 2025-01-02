@@ -1,6 +1,4 @@
-// testConnection.ts
-
-import { connectToDB } from "./src/lib/db";
+import connectToDB from "@/lib/db";
 import Registry from "./src/models/Registry";
 
 
