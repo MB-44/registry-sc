@@ -54,15 +54,9 @@ const NavigationBar: React.FC = () => {
           onMouseEnter={() => handleMouseEnter("wedding")}
           onMouseLeave={handleMouseLeave}
         >
-          <a href="/wedding-registry">Wedding Registry</a>
           {activeDropdown === "wedding" && (
             <ul className={styles.dropdown}>
-              <li>
-                <a href="/viewRegistry">View Registry</a>
-              </li>
-              <li>
-                <a href="/wedding-sub2">Add Items</a>
-              </li>
+              
             </ul>
           )}
         </li>
@@ -82,7 +76,6 @@ const NavigationBar: React.FC = () => {
         <li>
           <a href="/contact-us">Contact</a>
         </li>
-        {/* CHANGED START: Added a className for Profile li to handle right-aligned dropdown */}
         <li
           className={styles.profileItem}
           onMouseEnter={() => handleMouseEnter("Profile")}
@@ -92,15 +85,11 @@ const NavigationBar: React.FC = () => {
           {activeDropdown === "Profile" && (
             <ul className={styles.dropdown}>
               <li>
-                <a href="/editProfile">Edit Profile</a>
-              </li>
-              <li>
-                <a href="/sign-out">Sign Out</a>
+                <a href="../">Sign Out</a>
               </li>
             </ul>
           )}
         </li>
-        {/* CHANGED END */}
       </ul>
       {isMobileMenuOpen && <div className={styles.overlay} onClick={toggleMobileMenu}></div>}
     </nav>

@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -16,6 +17,22 @@ const InvitationPage = () => {
     // const handleCopy = (text: string) => {
     //     navigator.clipboard.writeText(text);
     // };
+
+    const handleCopy = (text: string) => {
+        if (text) {
+          navigator.clipboard
+            .writeText(text)
+            .then(() => {
+              alert("Copied to clipboard!");
+            })
+            .catch(() => {
+              alert("Failed to copy. Please try again.");
+            });
+        } else {
+          alert("Nothing to copy!");
+        }
+      };
+
 
     const handleCopyLink = (text: string) => {
         if (!link) {
@@ -48,7 +65,7 @@ const InvitationPage = () => {
             </p>
             <div className={styles.copyWrapper}>
             <input type="text" value={link || ""} readOnly className={styles.input} />
-            <button onClick={() => handleCopyLink(link || "")} className={styles.copyButton}>
+            <button onClick={() => handleCopy(link || "")} className={styles.copyButton}>
                 Copy
             </button>
             </div>
@@ -56,7 +73,7 @@ const InvitationPage = () => {
             <p>
                 <strong>Access Code:</strong> <span className={styles.code}>{code}</span>
             </p>
-            <button onClick={() => handleCopyCode(code || "")} className={styles.copyButton}>
+            <button onClick={() => handleCopy(code || "")} className={styles.copyButton}>
                 Copy Access Code
             </button>
             </div>
